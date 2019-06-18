@@ -8,6 +8,7 @@ authors = ["etienne-napoleone <etienne.napoleone@gmail.com>"]
 python = "^3.6"
 telegram = "^0.0.1"
 click = "^7.0"
+colorlog = "^4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
