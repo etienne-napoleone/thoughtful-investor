@@ -6,9 +6,9 @@ authors = ["etienne-napoleone <etienne.napoleone@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-telegram = "^0.0.1"
 click = "^7.0"
 colorlog = "^4.0"
+python-telegram-bot = "^11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

@@ -1,4 +1,8 @@
+import signal
+
 import colorlog
+
+from thoughtful_investor.signals import sigint_handler
 
 __version__ = '0.1.0'
 
@@ -11,3 +15,5 @@ handler.setFormatter(colorlog.ColoredFormatter(
 log = colorlog.getLogger(__name__)
 log.setLevel('INFO')
 log.addHandler(handler)
+
+signal.signal(signal.SIGINT, sigint_handler)
