@@ -54,9 +54,9 @@ def start_bot(token):
         )
         log.debug('Added command /random')
         dispatcher.add_handler(
-            CommandHandler('donate', handlers.commands.donate)
+            CommandHandler('support', handlers.commands.support)
         )
-        log.debug('Added command /donate')
+        log.debug('Added command /support')
         # catchall handlers
         dispatcher.add_handler(
             MessageHandler(Filters.command, handlers.catchalls.command)

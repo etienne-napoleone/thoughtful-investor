@@ -1,3 +1,4 @@
+from telegram.ext.dispatcher import run_async
 from telegram import ChatAction
 import colorlog
 
@@ -6,6 +7,7 @@ from thoughtful_investor.markov import gen_sentence
 log = colorlog.getLogger(__name__)
 
 
+@run_async
 def random(bot, update):
     log.info(f'/random from {update.message.from_user["first_name"]}')
     bot.send_chat_action(
