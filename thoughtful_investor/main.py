@@ -14,7 +14,8 @@ log = colorlog.getLogger(__name__)
 def entrypoint(debug):
     """CLI entrypoint"""
     if debug:
-        log.setLevel('DEBUG')
+        parent_module = '.'.join(__name__.split('.')[:-1])
+        colorlog.getLogger(parent_module).setLevel('DEBUG')
         log.debug('Debug enabled')
 
 
