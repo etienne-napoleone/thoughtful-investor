@@ -54,6 +54,10 @@ def start_bot(token):
         )
         log.debug('Added command /random')
         dispatcher.add_handler(
+            CommandHandler('yes_or_no', handlers.commands.yes_or_no)
+        )
+        log.debug('Added command /yes_or_no')
+        dispatcher.add_handler(
             CommandHandler('yes', handlers.commands.yes)
         )
         log.debug('Added command /yes')

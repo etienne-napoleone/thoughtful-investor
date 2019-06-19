@@ -42,7 +42,7 @@ def load_model(model_path):
     model = markovify.NewlineText.from_json(model_json)  # noqa F841
 
 
-def gen_sentence(tries=400):
+def gen_sentence(tries=250):
     try:
         log.debug('Generating up to 10 sentences...')
         for i in range(10):
@@ -57,7 +57,7 @@ def gen_sentence(tries=400):
     return None
 
 
-def gen_sentence_with_start(start='', tries=400):
+def gen_sentence_with_start(start='', tries=250):
     try:
         log.debug('Generating up to 10 sentences...')
         for i in range(10):
