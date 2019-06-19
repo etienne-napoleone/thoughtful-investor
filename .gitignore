@@ -1,5 +1,5 @@
-corpus.txt
-model*
+**/corpus.txt
+**/model**.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

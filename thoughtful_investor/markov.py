@@ -1,6 +1,7 @@
 import json
 import random
 import sys
+import os
 
 import colorlog
 import markovify
@@ -9,10 +10,9 @@ log = colorlog.getLogger(__name__)
 models = []
 
 
-def generate_models(corpus_path, model_filename, state_sizes):
-    global models
+def generate_model(corpus, model, state_size):
     try:
-        with open(corpus_path) as f:
+        with open(corpus) as f:
             text = f.read()
             log.debug('Imported corpus file')
     except FileNotFoundError:
@@ -21,32 +21,30 @@ def generate_models(corpus_path, model_filename, state_sizes):
     except Exception as e:
         log.fatal(f'Could not compute model: {e}')
         sys.exit(1)
-    for state_size in state_sizes:
-        models.append(markovify.NewlineText(text, state_size=state_size))
-    for index, model in enumerate(models):
-        model_json = model.to_json()
-        try:
-            with open(model_filename + str(index), 'w') as f:
-                json.dump(model_json, f)
-            log.debug(f'Model {index} created')
-        except Exception as e:
-            log.warning(f'Could not write model {index}: {e}')
+    model_raw = markovify.NewlineText(text, state_size=state_size)
+    model_json = model_raw.to_json()
+    try:
+        with open(model, 'w') as f:
+            json.dump(model_json, f)
+        log.debug(f'Model {model} created')
+    except Exception as e:
+        log.fatal(f'Could not write model {model}: {e}')
+        sys.exit(1)
 
 
-def load_models(model_filename):
+def load_models(models_repertory):
     global models
-    for index in range(0, 20):
+    for model in os.listdir(models_repertory):
         try:
-            with open(model_filename + str(index)) as f:
+            with open(os.path.join(models_repertory, model)) as f:
                 model_json = json.load(f)
-                log.debug(f'Imported existing model {index}')
-        except FileNotFoundError:
-            log.debug('No more model found')
-            break
+                models.append(markovify.NewlineText.from_json(model_json))
+                log.debug(f'Imported model {model}')
         except Exception as e:
-            log.fatal(f'Could not import model {index} from json: {e}')
-            sys.exit(1)
-        models.append(markovify.NewlineText.from_json(model_json))
+            log.warning(f'Ignoring {model} as it could not be imported')
+            log.debug(e)
+    if not len(models):
+        log.fatal('No model could be imported in {models_repertory}')
 
 
 def gen_sentence(tries=250):
