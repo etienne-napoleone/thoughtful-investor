@@ -1,15 +1,16 @@
 import json
+import random
 import sys
 
 import colorlog
 import markovify
 
 log = colorlog.getLogger(__name__)
-model = None
+models = []
 
 
-def generate_model(corpus_path, model_path, state_size):
-    global model
+def generate_models(corpus_path, model_filename, state_sizes):
+    global models
     try:
         with open(corpus_path) as f:
             text = f.read()
@@ -20,33 +21,39 @@ def generate_model(corpus_path, model_path, state_size):
     except Exception as e:
         log.fatal(f'Could not compute model: {e}')
         sys.exit(1)
-    model = markovify.NewlineText(text, state_size=state_size)
-    model_json = model.to_json()
-    try:
-        with open(model_path, 'w') as f:
-            json.dump(model_json, f)
-        log.debug('Model created')
-    except Exception as e:
-        log.warning(f'Could not write model: {e}')
+    for state_size in state_sizes:
+        models.append(markovify.NewlineText(text, state_size=state_size))
+    for index, model in enumerate(models):
+        model_json = model.to_json()
+        try:
+            with open(model_filename + str(index), 'w') as f:
+                json.dump(model_json, f)
+            log.debug(f'Model {index} created')
+        except Exception as e:
+            log.warning(f'Could not write model {index}: {e}')
 
 
-def load_model(model_path):
-    global model
-    try:
-        with open(model_path) as f:
-            model_json = json.load(f)
-            log.debug('Imported existing model')
-    except Exception as e:
-        log.fatal(f'Could not import model from json: {e}')
-        sys.exit(1)
-    model = markovify.NewlineText.from_json(model_json)
+def load_models(model_filename):
+    global models
+    for index in range(0, 20):
+        try:
+            with open(model_filename + str(index)) as f:
+                model_json = json.load(f)
+                log.debug(f'Imported existing model {index}')
+        except FileNotFoundError:
+            log.debug('No more model found')
+            break
+        except Exception as e:
+            log.fatal(f'Could not import model {index} from json: {e}')
+            sys.exit(1)
+        models.append(markovify.NewlineText.from_json(model_json))
 
 
 def gen_sentence(tries=250):
     try:
         log.debug('Generating up to 10 sentences...')
         for i in range(10):
-            sentence = model.make_sentence(tries=tries)
+            sentence = random.choice(models).make_sentence(tries=tries)
             if sentence:
                 log.debug('Found a valid sentence')
                 return sentence
@@ -61,7 +68,7 @@ def gen_sentence_with_start(start='', tries=250):
     try:
         log.debug('Generating up to 10 sentences...')
         for i in range(10):
-            sentence = model.make_sentence_with_start(start, tries=tries)
+            sentence = random.choice(models).make_sentence_with_start(start, tries=tries)
             if sentence:
                 log.debug('Found a valid sentence')
                 return sentence
