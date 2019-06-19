@@ -1,3 +1,4 @@
+from os import path
 import sys
 
 from telegram.error import InvalidToken
@@ -10,45 +11,58 @@ import colorlog
 
 from thoughtful_investor import __version__
 from thoughtful_investor import handlers
+from thoughtful_investor import markov
 
 log = colorlog.getLogger(__name__)
 
 
 @click.command(help='A telegram bot holding TOMO.')
-@click.argument('telegram_token', envvar='TELEGRAM_TOKEN')
-@click.option('--debug', is_flag=True, help='Set logging level to debug.')
+@click.argument('token', envvar='TOKEN')
+@click.option('--corpus', envvar='CORPUS', type=click.Path(exists=True, dir_okay=False), default='./corpus.txt', show_default=True, help='Corpus file path.')  # noqa E501
+@click.option('--model', envvar='MODEL', type=click.Path(dir_okay=False), default='./model.json', show_default=True, help='Model file path.')  # noqa E501
+@click.option('--state-size', envvar='STATE_SIZE', type=int, default=5, show_default=True, help='State size of the markov model.')  # noqa E501
+@click.option('--debug', envvar='DEBUG', is_flag=True, help='Set logging level to debug.')  # noqa E501
 @click.version_option(version=__version__)
-def entrypoint(telegram_token, debug):
+def entrypoint(token, corpus, model, state_size, debug):
     """CLI entrypoint"""
     log.info('🤔 Starting thoughtful-investor v{}'.format(__version__))
     if debug:
         log.setLevel('DEBUG')
         log.debug('Debug enabled')
-    poll(telegram_token)
+    if path.isfile(model):
+        log.info('Model found, loading now...')
+        markov.load_model(model)
+    else:
+        log.warn('Model not found, generating now...')
+        markov.generate_model(corpus, str(model), state_size)
+    start_bot(token)
 
 
-def poll(token):
+def start_bot(token):
     try:
         updater = Updater(token=token)
+        updater.logger = log
         log.debug('Created updater')
         dispatcher = updater.dispatcher
-        # error handler
+        dispatcher.logger = log
+        # error handlers
         dispatcher.add_error_handler(handlers.error)
         log.debug(f'Added error handler')
-        # commands handler
+        # command handlers
         dispatcher.add_handler(
-            CommandHandler('say', handlers.commands.say)
+            CommandHandler('random', handlers.commands.random)
         )
-        log.debug('Added command /say')
+        log.debug('Added command /random')
         dispatcher.add_handler(
             CommandHandler('donate', handlers.commands.donate)
         )
         log.debug('Added command /donate')
-        # catchall command handler handler
+        # catchall handlers
         dispatcher.add_handler(
             MessageHandler(Filters.command, handlers.catchalls.command)
         )
         log.debug('Added catchall handler')
+        log.info('🤖 Starting bot')
         updater.start_polling(timeout=60)
         updater.idle()
     except InvalidToken:

@@ -1,4 +1,4 @@
-from thoughtful_investor.handlers.commands.donates import donate
-from thoughtful_investor.handlers.commands.says import say
+from thoughtful_investor.handlers.commands.others import donate
+from thoughtful_investor.handlers.commands.markov import random
 
-__all__ = ['donate', 'say']
+__all__ = ['donate', 'random']

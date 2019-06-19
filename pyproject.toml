@@ -9,6 +9,7 @@ python = "^3.6"
 click = "^7.0"
 colorlog = "^4.0"
 python-telegram-bot = "^11.1"
+markovify = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
