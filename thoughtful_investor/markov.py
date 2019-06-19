@@ -39,7 +39,7 @@ def load_model(model_path):
     except Exception as e:
         log.fatal(f'Could not import model from json: {e}')
         sys.exit(1)
-    model = markovify.NewlineText.from_json(model_json)  # noqa F841
+    model = markovify.NewlineText.from_json(model_json)
 
 
 def gen_sentence(tries=250):
