@@ -68,7 +68,9 @@ def gen_sentence_with_start(start='', tries=250):
     try:
         log.debug('Generating up to 10 sentences...')
         for i in range(10):
-            sentence = random.choice(models).make_sentence_with_start(start, tries=tries)
+            sentence = random.choice(models).make_sentence_with_start(
+                start, tries=tries
+            )
             if sentence:
                 log.debug('Found a valid sentence')
                 return sentence

@@ -20,7 +20,7 @@ log = colorlog.getLogger(__name__)
 @click.argument('token', envvar='TOKEN')
 @click.option('--corpus', envvar='CORPUS', type=click.Path(exists=True, dir_okay=False), default='./corpus.txt', show_default=True, help='Corpus file path.')  # noqa E501
 @click.option('--model', envvar='MODEL', type=click.Path(dir_okay=False), default='./model', show_default=True, help='Model base filename.')  # noqa E501
-@click.option('--state-size', envvar='STATE_SIZE', type=int, multiple=True, default=3, show_default=True, help='State sizes of the markov model.')  # noqa E501
+@click.option('--state-size', envvar='STATE_SIZE', multiple=True, show_default=True, help='State sizes of the markov model.')  # noqa E501
 @click.option('--debug', envvar='DEBUG', is_flag=True, help='Set logging level to debug.')  # noqa E501
 @click.version_option(version=__version__)
 def entrypoint(token, corpus, model, state_size, debug):
