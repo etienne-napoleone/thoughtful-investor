@@ -14,7 +14,7 @@ def support(bot, update):
     text = (
         '🔗☕️\nThis bot was made using [makov chains]'
         '(https://en.wikipedia.org/wiki/Markov_chain#Applications) '
-        'and some coffees.'
+        'and some coffee.'
         '\nIf you enjoy this bot and want to help me '
         '[build](https://github.com/etienne-napoleone) more stuff, '
         'I\'ll be thankful if you send me some some TOMO for a coffee :)\n'
