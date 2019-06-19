@@ -7,6 +7,10 @@ from thoughtful_investor.markov import gen_sentence_with_start
 
 log = colorlog.getLogger(__name__)
 
+NO_RESULT_MESSAGES = [
+    '🤯',
+]
+
 
 @run_async
 def random(bot, update):
@@ -18,7 +22,7 @@ def random(bot, update):
     message = gen_sentence()
     bot.send_message(
         chat_id=update.message.chat_id,
-        text=message,
+        text=message if message else NO_RESULT_MESSAGES,
     )
 
 
@@ -32,7 +36,7 @@ def yes(bot, update):
     message = gen_sentence_with_start('Yes')
     bot.send_message(
         chat_id=update.message.chat_id,
-        text=message,
+        text=message if message else NO_RESULT_MESSAGES,
     )
 
 
@@ -46,5 +50,5 @@ def no(bot, update):
     message = gen_sentence_with_start('No')
     bot.send_message(
         chat_id=update.message.chat_id,
-        text=message,
+        text=message if message else NO_RESULT_MESSAGES,
     )

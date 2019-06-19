@@ -54,6 +54,7 @@ def gen_sentence(tries=400):
                 log.debug('Found a "None" sentence, retrying...')
     except Exception as e:
         log.error(f'Could not get sentence: {e}')
+    return None
 
 
 def gen_sentence_with_start(start='', tries=400):
@@ -68,3 +69,4 @@ def gen_sentence_with_start(start='', tries=400):
                 log.debug('Found a "None" sentence, retrying...')
     except Exception as e:
         log.error(f'Could not get sentence: {e}')
+    return None

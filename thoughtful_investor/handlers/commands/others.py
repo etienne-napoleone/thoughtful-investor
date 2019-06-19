@@ -17,7 +17,8 @@ def support(bot, update):
         'and some coffee.'
         '\nIf you enjoy this bot and want to help me '
         '[build](https://github.com/etienne-napoleone) more stuff, '
-        'I\'ll be thankful if you send me some some TOMO for a coffee :)\n'
+        'I\'ll be thankful if you send me some TOMO to ... well get '
+        'more coffee :)\n'
         '`0x5539e0E7B54b55f81Be0a8E0Db33bD8bAC1C7e4B`'
     )
     bot.send_message(
